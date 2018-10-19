@@ -1,6 +1,11 @@
-/** First Wollok example */
-object wollok {
-	method howAreYou() {
-		return 'I am Wolloktastic!'
+import Formacion.*
+import depositos.*
+import vagones.*
+import locomotoras.*
+
+
+object empresaFerroviaria {
+	method elMasPesadoDeCadaFormacion(deposito){
+	  return deposito.formaciones().map({formacion=>formacion.elMasPesadoFormacion()})
 	}
 }

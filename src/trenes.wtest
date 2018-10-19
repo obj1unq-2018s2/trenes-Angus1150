@@ -1,0 +1,80 @@
+import trenes.*
+import Formacion.*
+import depositos.*
+import vagones.*
+import locomotoras.*
+
+// auto-generated at 18/10/2018 19:30:16d
+describe "exported test from REPL session" {
+	
+	const vag1 = new VagonPasajeros(largo=3,anchoUtil=3,banios=2)
+	const vag2= new VagonPasajeros(largo=4,anchoUtil=4,banios=2)
+	const vag3= new VagonPasajeros(largo=2,anchoUtil=4,banios=3)
+	const vag4= new VagonPasajeros(largo=5,anchoUtil=3,banios=1)
+	const vag5= new VagonPasajeros(largo=8,anchoUtil=2,banios=0)
+	const vag6= new VagonPasajeros(largo=2,anchoUtil=3,banios=4)
+	const vag7= new VagonCarga(cargaMax=30000)
+	const vag8= new VagonCarga(cargaMax=20000)
+	const vag9= new VagonCarga(cargaMax=10000)
+	const vag10= new VagonPasajeros(largo=2,anchoUtil=3,banios=5)
+	const loco1= new Locomotora(peso=2000,velMaxima=150, puedeLlevar=80000)
+	const loco2= new Locomotora(peso=1000,velMaxima=250, puedeLlevar=70000)
+	const loco3= new Locomotora(peso=1500,velMaxima=45, puedeLlevar=75000)
+	const loco6= new Locomotora(peso=3000,velMaxima=300, puedeLlevar=35000)
+	const form1= new FormacionDeCortaDist(vagones= [vag1,vag2], locomotoras=[loco1])
+	const form2= new FormacionDeLargaDist(vagones= [vag3,vag4], locomotoras=[loco2], uneCiudadesGrandes=true)
+	const form3= new FormacionDeCortaDist(vagones= [vag5,vag6], locomotoras=[loco3])
+	const form4= new FormacionDeLargaDist(vagones= [vag7,vag8], locomotoras=[], uneCiudadesGrandes=false)
+	const form5= new FormacionAltaVelocidad(vagones= [vag9,vag10], locomotoras=[loco6], uneCiudadesGrandes=true)
+	const loco4= new Locomotora(peso=1800,velMaxima=45, puedeLlevar=500)
+	const loco5= new Locomotora(peso=1900,velMaxima=35, puedeLlevar=45000)
+	
+	const depo1=new Depositos(formaciones= [form1,form2,form3], locomotoras=[loco4])
+		
+		test "total de pasajeros"{
+			assert.equals(70,form1.totalPasajeros())
+		}
+		test"vagones livianos"{
+			assert.equals(1,form2.cantLivianos())
+		}
+		test "velocidad maxima"{
+			assert.equals(45,form3.velMaxima())
+		}
+		test "formacion eficiente"{
+			assert.that(form1.esEficiente())
+		}
+		test "puede moverse"{
+			assert.notThat(form4.puedeMoverse())
+		}
+		test "cuantos kilos falta"{
+			assert.equals(50320, form4.cuantoLeFalta())
+		}
+	
+		test " el mas pesado y el mas pesado de cada"{
+			assert.equals(vag2, form1.elMasPesadoFormacion())
+			assert.equals([vag2,vag4,vag5], empresaFerroviaria.elMasPesadoDeCadaFormacion(depo1))
+	    }
+		test "Es Comleja"{
+			assert.notThat(form1.esCompleja())
+		}
+		test "necesito un experimentado"{
+			assert.notThat(depo1.necesitaUnExperimentado())
+		}
+		test"agregar locomotora para que mueva formacion"{
+			depo1.agregarLocomotoraParaQueSeMueva(form4,loco5)
+			assert.notThat(form4.puedeMoverse())
+		}
+		test"esta bien armada"{
+			assert.that(form1.estaBienArmada())
+			assert.that(form2.estaBienArmada())
+		}
+		test " 10.velocidades"{
+			assert.equals(60,form1.velMaxima())
+			assert.equals(200,form2.velMaxima())
+			assert.equals(0,form4.velMaxima())
+		}
+		test "11.trenes alta velocidad"{
+			assert.notThat(form5.estaBienArmada())
+		}
+		
+}
